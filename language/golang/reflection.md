@@ -1,4 +1,4 @@
-##### Type and Interface
+### Type and Interface
 反射是建立在类型系统基础之上的，要想学习反射，需从类型系统开始。   
 Go是静态类型语言，每个变量必须有其静态类型。   
 变量静态类型为其声明时的类型，哪怕两个变量底层类型一样，在不做类型转换的情况下也不能相互赋值，比如：   
@@ -27,8 +27,8 @@ r = new(bytes.Buffer)
    
 极端的例子是空接口 interface{}，代表了空的方法集合，所以其满足所有类型。
    
-##### The first law of reflection
-##### 1. Reflection goes from interface value to reflection object.
+### The first law of reflection
+### 1. Reflection goes from interface value to reflection object.
 在基础层面上，reflection只是用来检测存储在 interface变量中的 <类型和值 对>的一种机制。   
 在reflect包中有两种类型，reflect.type和reflect.value。   
 reflect.TypeOf 返回类型 reflect.Type   
@@ -64,8 +64,8 @@ value: 3.4
 reflect.Value 还有 setInt() 和 setFloat() 方法，但只有操作对象是 settability 才可以。   
 Kind() 方法返回的是变量底层的类型，比如返回 int64 而不是自定义的 MyInt。   
    
-##### The second law of reflection
-##### 2. Reflection goes from reflection object to interface value
+### The second law of reflection
+### 2. Reflection goes from reflection object to interface value
 记住一点，Interface() 方法与 ValueOf() 方法为护逆方法。   
 func Interface(v Value) interface{}    
 ```golang
@@ -78,8 +78,8 @@ fmt.Println(v.Interface())
 比如，fmt.Println("value is %7.1e", v.Interface())   
 输出：3.4e+00   
    
-##### The third law of reflection
-##### 3. To modify a reflection object, the value must be settlable.
+### The third law of reflection
+### 3. To modify a reflection object, the value must be settlable.
 记住一点，什么叫做 settlable？即按照指针传递的就是settlable，按照值传递的就是 unsettlable。比如：   
 ```golang
 var x float64 = 3.4
