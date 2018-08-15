@@ -1,4 +1,4 @@
-### Linux生成密码的10种方法
+### Linux下产生随机密码10方法
 
 1. 使用SHA来哈希日期，输出头32个字符
 ```bash
@@ -48,4 +48,6 @@ randpw(){ < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;}
 10. 最简洁的方式
 ```bash
 date | md5sum
-```
+```    
+
+[原文链接](http://os.51cto.com/art/201102/246360.htm, "Linux下产生随机密码10方法")   
