@@ -26,13 +26,117 @@ RMW操作在不同的cpu家族中是通过不同的方法来实现的：
 3. 检测如果指定内存位置还是原始的值，则使用新值写入该内存位置；   
 
 ##### ABA问题
-1. 线程A从指定内存位置读取原始的值X；
+1. 线程A从指定内存位置读取原始的值X，线程B获得执行权；
 2. 线程B更新该内存位置的值为Y，并完成其他计算或IO任务；
-3. 线程B更新该内存位置的值为X；
+3. 线程B更新该内存位置的值为X，线程A获得执行权；
 4. 线程A使用原始值X计算得到新的值Z；
-5. 线程A检测该内存位置的值为X，使用值Z写入该内存； 
+5. 线程A检测该内存位置的值为X，使用值Z写入该内存；    
+
+##### 如何避免ABA问题   
+
+1. Double CAS   
+在32位的系统上，检查64位的内容：   
+1）一次用CAS检查双倍长度的值，前半部分是指针，后半部分是一个计数器；   
+2）只有这两个部分都一致，才算通过检验。前半部分赋新的值，并把计数器累加一；   
+这样一来，ABA发生时，虽然值一样，但是计数器不一样。   
+
+2. 使用内存引用计数   
+```c
+SafeRead(q)
+{
+    loop:
+        p = q->next;
+        if (p == NULL) {
+            return p;
+        }
+
+        Fetch&Add(p->refcnt, 1);
+
+        if (p == q->next) {
+            return p;
+        } else {
+            Release(p);
+        }
+    goto loop;
+}
+```
+其中的Fetch&Add和Release分别是加引用计数和减引用计数，都是源自操作，这样就可以阻止内存被回收了。   
+
 
 ##### 内存栅栏
+
+##### 用数组实现无锁队列（golang）
+```golang
+package main
+
+import "fmt"
+
+const HEAD := -1
+const TAIL := -2
+const EMPTY := -3
+
+type lockFreeQueue []int
+
+func new(n int) *lockFreeQueue {
+    queue := &lockFreeQueue{}
+    for num := range n {
+        queue[num] = EMPTY
+    }
+    queue[num/2] = HEAD
+    queue[num/2 + 1] = TAIL
+    return queue
+}
+
+func (queue *lockFreeQueue)findHead() return int {
+    for i:=0; i<len(queue); i++ {
+        if queue[i] == HEAD {
+            return i
+        }
+    }
+}
+
+func (queue *lockFreeQueue)findTail() return int {
+    for i:=0; i<len(queue); i++ {
+        if queue[i] == TAIL {
+            return i
+        }
+    }
+}
+
+func (queue *lockFreeQueue)enQueue(x int) error {
+    index := queue.findTail()
+    if index == (len(queue)-1) {
+        return QueueFullError
+    }
+
+    while true {
+        if doubleCAS(queue[index], TAIL, x) {
+            break
+        }
+    }
+    doubleCAS(queue[index+1], EMPTY, TAIL)
+
+    return nil
+}
+
+func (queue *lockFreeQueue)deQueue() (int, error) {
+    index := queue.findHead()
+    if queue[index] == TAIL {
+        return 0, QueueEmptyError
+    }
+
+    while true {
+        if doubleCAS(queue[index], HEAD, EMPTY) {
+            break
+        }
+    }
+    retVal := queue[index+1]
+    queue[index+1] = HEAD
+
+    return retVal
+}
+
+```
 
 
 参考资料：[Lock-Free编程](https://www.cnblogs.com/gaochundong/p/lock_free_programming.html#atomic_read_modify_write_operations, "Lock-Free编程")
