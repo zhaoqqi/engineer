@@ -139,4 +139,6 @@ func (queue *lockFreeQueue)deQueue() (int, error) {
 ```
 
 
-参考资料：[Lock-Free编程](https://www.cnblogs.com/gaochundong/p/lock_free_programming.html#atomic_read_modify_write_operations, "Lock-Free编程")
+参考资料：   
+[Lock-Free编程](https://www.cnblogs.com/gaochundong/p/lock_free_programming.html#atomic_read_modify_write_operations, "Lock-Free编程")   
+[无锁队列的实现](https://coolshell.cn/articles/8239.html, "无锁队列的实现")   
