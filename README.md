@@ -1,7 +1,7 @@
-# engineer
+## engineer
 Knowledge hierarchy of a  engineer that must learn in deep.
 
-# 2018 plan
+## 2018 plan
 《计算机网络》    
 《现代操作系统》    
 《算法》(第四版)(java)    
@@ -9,3 +9,6 @@ Knowledge hierarchy of a  engineer that must learn in deep.
 《effective go》    
 《数据库系统概念》    
 《编码 Code》    
+
+## old blog link
+[老博客地址](https://zhaoqqi.github.io/, "老博客地址")  
