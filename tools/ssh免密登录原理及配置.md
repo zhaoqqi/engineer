@@ -66,5 +66,10 @@ Last login: Thu Aug 30 23:04:50 2018 from serverA
 ```
 
 6. 禁止serverB使用密码登录
-修改serverB上/etc/ssh/ssh_config配置文件   
-将PasswordAuthentication改为no，ChallengeResponseAuthentication改为no，重启sshd服务。
+修改serverB上/etc/ssh/sshd_config配置文件，注意不是ssh_config，而是sshd_config：
+```bash
+    AuthorizedKeysFile   .ssh/authorized_keys   //公钥公钥认证文件
+    PubkeyAuthentication yes   //可以使用公钥登录
+    PasswordAuthentication no  //不允许使用密码登录
+```
+重启ssh服务即可   
