@@ -13,3 +13,6 @@
 《以表现为傲：一直前行》，（美）莱斯·施瓦布著
 《购并霸业：时代华纳总裁史蒂夫·罗斯传》，（美）康尼·布鲁克著
 ```
+
+[查理芒格推荐的所有书目]: http://mp.weixin.qq.com/s?__biz=MzI3Mjk3Mzc3NQ==&amp;mid=2247485045&amp;idx=1&amp;sn=7cda8d869397633e2466757d98564e56&amp;chksm=eb2b2cd5dc5ca5c3c44622fe8dd70221b83e94dd96772517b3464ad46b746c640370a04c338e&amp;mpshare=1&amp;scene=24&amp;srcid=1011S9WZlalA3nPeapO388aD#rd
+

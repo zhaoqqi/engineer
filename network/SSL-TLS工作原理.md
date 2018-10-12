@@ -57,7 +57,7 @@ pem 和 der 格式可以互转：
 ```bash
 openssl x509 -in ca.crt -outform DER -out ca.der  //pem -> der
 openssl x509 -inform der -in ca.der -out ca.pem    // der -> pem
-```   
+```
 pem 格式经过加密的文本文件，一般有以下几个开头结尾格式：
 ```bash
 -----BEGIN RSA PRIVATE KEY-----
@@ -68,7 +68,7 @@ or:
 or:
 ----BEGIN CERTIFICATE-----
 -----END CERTIFICATE-----
-```   
+```
 der格式: 经过加密的二进制文件。   
 
 #### SSL/TLS 与 Openssl/mbedtls 的关系
