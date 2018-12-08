@@ -9,6 +9,24 @@
 - ss 客户端设置
 [ubuntu下设置ss客户端](https://github.com/zhaoqqi/engineer/blob/master/tools/shadowsocks.md) 
 
+通过系统网络设置实现：
+进入代理设置 System settings > Network > Network Proxy
+设置Method为Automatic
+设置Configuration URL为autoproxy.pac文件的路径
+```bash
+$ apt-get install python-pip
+$ pip install genpac
+$ genpac -p "SOCKS5 127.0.0.1:1080" --gfwlist-proxy="SOCKS5 127.0.0.1:1080" --gfwlist-url=https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt --output="autoproxy.pac"
+$ mv autoproxy.pac /home/zhaoqi/Documents/autoproxy.pac
+```
+也可以设置为手动模式：
+```bash
+进入代理设置 System settings > Network > Network Proxy
+设置Method为Manual
+Socks Host: 127.0.0.1, Port: 1080
+```
+[Linux下使用Shadowsocks和PAC玩转小飞机](http://lckiss.com/?p=2172) 
+
 - firefox 设置
 Preformance -> Network Setting -> 选中 Manual proxy configuration；
 选择 SOCKS V5协议，SOCKS Host 127.0.0.1, port 1080； 
@@ -38,3 +56,13 @@ Ubuntu 自带的邮件客户端，简单设置服务器地址和端口、选择�
 - 使用网页版微信
 - 使用手机QQ……
 - 不过，像我们公司使用 one piece 做内部通信软件，有 Linux 客户端，还是很幸福的，HOHO～
+
+#### 主题设置
+paper主题的安装
+```bash
+sudo add-apt-repository ppa:dyatlov-igor/materia-theme
+sudo apt update
+sudo apt install materia-gtk-theme
+在软件管理中心安装 unity weak tools
+安装成功后，打开unity weak tools进行相应设置即可
+```
