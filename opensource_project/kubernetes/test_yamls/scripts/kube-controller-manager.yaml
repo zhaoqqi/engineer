@@ -1,0 +1,48 @@
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    component: kube-controller-manager
+  name: kube-controller-manager-3rd
+spec:
+  containers:
+  - command:
+    - /usr/local/bin/kube-controller-manager
+    - --logtostderr=true
+    - --v=0
+    - --port=10452
+    - --kubeconfig=/etc/kubernetes/admin.kubeconfig
+    - --allocate-node-cidrs=true
+    - --cluster-cidr=10.254.0.1/16
+    - --controllers=*,tokencleaner
+    - --feature-gates=LocalStorageCapacityIsolation=true,PersistentLocalVolumes=true,MountPropagation=true,Accelerators=true
+    - --service-account-private-key-file=/etc/kubernetes/ca-key.pem
+    - --root-ca-file=/etc/kubernetes/ca.pem
+    - --horizontal-pod-autoscaler-use-rest-clients=true
+    image: hub.kce.ksyun.com/ksyun/kube-controller-manager:v1.10.5
+    imagePullPolicy: Always
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: 10452
+        scheme: HTTP
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    name: kube-controller-manager
+    resources:
+      requests:
+        cpu: 200m
+    volumeMounts:
+    - mountPath: /etc/kubernetes
+      name: k8s
+      readOnly: true
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /opt/ssl-3rd
+    name: k8s
+  nodeSelector:
+    kubernetes.io/hostname: 10.0.6.6

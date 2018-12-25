@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  creationTimestamp: null
+  labels:
+    component: kube-apiserver
+  name: kube-apiserver-3rd
+spec:
+  containers:
+  - command:
+    - /usr/local/bin/kube-apiserver
+    - --logtostderr=true
+    - --v=3
+    - --secure-port=8443
+    - --etcd-servers=http://192.168.0.10:2379
+    - --insecure-bind-address=192.168.0.16
+    - --insecure-port=8080
+    - --allow-privileged=true
+    - --service-cluster-ip-range=10.254.0.1/16
+    - --admission-control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota
+    - --apiserver-count=1
+    - --advertise-address=192.168.0.16
+    - --bind-address=192.168.0.16
+    - --enable-swagger-ui=true
+    - --feature-gates=LocalStorageCapacityIsolation=true,PersistentLocalVolumes=true,MountPropagation=true
+    - --authorization-mode=RBAC
+    - --runtime-config=rbac.authorization.k8s.io/v1alpha1
+    - --client-ca-file=/srv/kubernetes/admin.pem
+    - --requestheader-client-ca-file=/srv/kubernetes/ca.pem
+    - --service-account-key-file=/srv/kubernetes/ca-key.pem
+    - --tls-cert-file=/srv/kubernetes/kubernetes.pem
+    - --tls-private-key-file=/srv/kubernetes/kubernetes-key.pem
+    - --enable-bootstrap-token-auth
+    - --token-auth-file=/srv/kubernetes/token.csv
+    - --basic-auth-file=/srv/kubernetes/auth.csv
+    image: hub.kce.ksyun.com/ksyun/kube-apiserver:v1.10.11
+    imagePullPolicy: Always
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: 192.168.0.16
+        path: /healthz
+        port: 8443
+        scheme: HTTPS
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    name: kube-apiserver
+    resources:
+      requests:
+        cpu: 250m
+    volumeMounts:
+    - mountPath: /srv/kubernetes
+      name: k8s
+      readOnly: true
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /opt/ssl-3rd
+    name: k8s
+  nodeSelector:
+    kubernetes.io/hostname: 10.0.6.6

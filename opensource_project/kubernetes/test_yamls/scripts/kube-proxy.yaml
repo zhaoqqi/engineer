@@ -1,0 +1,80 @@
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-proxy
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    k8s-app: kube-proxy
+  name: kube-proxy
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-proxy
+    spec:
+      containers:
+      - command:
+        - /usr/local/bin/kube-proxy
+        -  --logtostderr=true
+        - --v=2
+        - --feature-gates=LocalStorageCapacityIsolation=true,MountPropagation=true
+        - --cluster-cidr=10.254.0.1/16
+        - --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig
+        image: hub.kce.ksyun.com/ksyun/kube-proxy:v1.10.5
+        imagePullPolicy: Always
+        name: kube-proxy
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/lib/kube-proxy
+          name: kube-proxy
+        - mountPath: /run/xtables.lock
+          name: xtables-lock
+        - mountPath: /etc/kubernetes
+          name: k8s
+          readOnly: true
+        - mountPath: /etc/localtime
+          name: time-zone
+          readOnly: true
+        livenessProbe:
+          failureThreshold: 8
+          httpGet:
+            host: 127.0.0.1
+            path: /healthz
+            port: 10256
+            scheme: HTTP
+          initialDelaySeconds: 15
+          timeoutSeconds: 15
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      restartPolicy: Always
+      serviceAccountName: kube-proxy
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - operator: Exists
+      - effect: NoSchedule
+        key: node.cloudprovider.kubernetes.io/uninitialized
+        value: "true"
+      volumes:
+      - hostPath:
+          path: /data/kube-proxy
+        name: kube-proxy
+      - hostPath:
+          path: /etc/localtime
+        name: time-zone
+      - hostPath:
+          path: /run/xtables.lock
+        name: xtables-lock
+      - hostPath:
+          path: /opt/ssl
+        name: k8s
+  templateGeneration: 1
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+

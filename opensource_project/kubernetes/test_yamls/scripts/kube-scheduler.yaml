@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    component: kube-scheduler
+  name: kube-scheduler-3rd
+spec:
+  containers:
+  - command:
+    - /usr/local/bin/kube-scheduler
+    - --logtostderr=true
+    - --v=3
+    - --port=10451
+    - --master=https://192.168.0.16:8443
+    - --kubeconfig=/etc/kubernetes/admin.kubeconfig
+    - --feature-gates=LocalStorageCapacityIsolation=true,PersistentLocalVolumes=true,MountPropagation=true,Accelerators=true
+    image: hub.kce.ksyun.com/ksyun/kube-scheduler:v1.10.5
+    imagePullPolicy: Always
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: 10451
+        scheme: HTTP
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    name: kube-scheduler
+    resources:
+      requests:
+        cpu: 100m
+    volumeMounts:
+    - mountPath: /etc/kubernetes
+      name: k8s
+      readOnly: true
+  hostNetwork: true
+  volumes:
+  - hostPath:
+      path: /opt/ssl-3rd
+    name: k8s
+  nodeSelector:
+    kubernetes.io/hostname: 10.0.6.6
+
