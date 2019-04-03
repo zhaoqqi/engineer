@@ -52,6 +52,9 @@ Ubuntu 自带的邮件客户端，简单设置服务器地址和端口、选择�
 - Remarkable
 - Typora
 
+#### 画图
+https://www.draw.io
+
 #### 社交软的
 - 使用网页版微信
 - 使用手机QQ……
@@ -60,9 +63,17 @@ Ubuntu 自带的邮件客户端，简单设置服务器地址和端口、选择�
 #### 主题设置
 paper主题的安装
 ```bash
-sudo add-apt-repository ppa:dyatlov-igor/materia-theme
-sudo apt update
-sudo apt install materia-gtk-theme
+sudo add-apt-repository ppa:snwh/pulp
+sudo apt-get update
+sudo apt-get install paper-gtk-theme paper-icon-theme
 在软件管理中心安装 unity weak tools
 安装成功后，打开unity weak tools进行相应设置即可
 ```
+参考链接：[在 Linux 下体验谷歌 Material风格的GTK和图标主题Paper](https://linux.cn/article-5548-1.html) 
+
+#### 安装 vnc-viewer
+```bash
+sudo apt-get install vncviewer
+```
+
+
