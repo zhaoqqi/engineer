@@ -26,9 +26,13 @@
 
 ### 四、技术的组成和关键点
 #### Felix
+Calico agent，运行于每个 node 节点（网络节点），负责节点的路由管理。
 #### iBgp client
+internal BGP client，BGP协议客户端，iBGP负责同一子网内部的路由学习。
 #### eBgp client
+edge BGP client，BGP协议客户端，eBGP负责子网之间的路由学习。
 #### Route reflector
+负责全网路由学习，与每个iBGP连接，可以减少iBGP/eBGP之间的两两连接，减少路由学习路径复杂度。适合大规模集群使用。
 
 ### 五、技术的底层原理和关键点
 #### IP路由协议
